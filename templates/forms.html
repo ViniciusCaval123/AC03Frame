@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <form id="forms">
+            <label>First Name:</label><input type="text" name="first_name"/>
+            <br/>
+            <label>Last Name:</label><input type="text" name="last_name"/>
+            <br/>
+            <label>Time:</label><input type="text" name="time_name"/>
+            <br/>
+            <select id ="combo">
+             <option value="Meio-campista" >Meio-campista</option>
+             <option value="Atacante" >Atacante</option>
+             <option value="Zagueiro" >Zagueiro</option>
+             <option value="Goleiro" >Goleiro</option>
+            </select>
+            <input type="submit" value="submit" />
+        </form>
+        <div><p id="resp"></p></div>
+        
+        <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+        <script type="text/javascript">
+            $('#forms').submit(function(e) {
+                    e.preventDefault();
+
+                    var dados = {
+                       first: $('[name=first_name]').val(),
+                       last:$('[name=last_name]').val(),
+                       time:$('[name=time_name]').val(),
+                       combo: $('#combo option:selected').val()
+                    }
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/api/chato',
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        data: JSON.stringify(dados),
+                        success: function(callback) {
+                            console.log(callback);
+                            $('#resp').append("Respondeu: " + callback.first +'-'+ callback.last +'-'+ callback.time +'-'+ callback.combo);
+                            $('[name=first_name]').val('');
+                            $('[name=last_name]').val('');
+                            $('[name=time_name]').val('');
+                            $('#combo').val(1);
+                        },
+                        error: function() {
+                            $(this).html("error!");
+                        }
+                    });
+                });
+        </script>
+    </body>
+</html>
